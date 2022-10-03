@@ -1,0 +1,9 @@
+User-agent: *
+
+Disallow: *?
+
+Allow: /
+Allow: *.css?*
+
+Host: https://collection-lvivgallery.org.ua
+Sitemap: https://collection-lvivgallery.org.ua/sitemap.xml

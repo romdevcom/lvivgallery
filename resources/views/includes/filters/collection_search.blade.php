@@ -1,0 +1,108 @@
+<aside class="col-sm-8 col-md-6 col-lg-3">
+    <form id="#" action="{{url('collections')}}" method="GET" class="aside-form">
+        <ul class="aside-bar list-style">
+            <li class="aside-bar__block">
+                <div class="aside-search">
+                    <input type="text" name="full-search" class="aside-search__ctrl"
+                           placeholder="@lang('translations.search_by_key')"
+                           value="{{!empty($string) ? $string : ''}}">
+                    <button type="submit" class="aside-search__btn icon-search">search</button>
+                </div>
+            </li>
+        </ul>
+        <ul class="aside-bar list-style">
+            <li class="aside-bar__block">
+                <ul class="aside-accordion list-style">
+                    <li class="aside-accordion__itm">
+                        <label for="filter-trigger" class="main-filter-lbl">main-checkbox</label>
+                        <a href="#" class="aside-accordion__opener">@lang('translations.type')</a>
+                        <div class="aside-accordion__content">
+                            <dl class="aside-filter list-style aside-filter--advanced">
+                                <dt></dt>
+                                <dd class="aside-filter__itm">
+                                    <input type="checkbox" class="aside-filter__checkbox"
+                                           name="collection_type[261]" id="collection-type-261"
+                                           value="261"
+                                           {{$collectionType == 261 ? 'checked' : ''}}>
+                                    <label for="collection-type-261">@lang('translations.internal') ({{isset($collectionTypeCount[261]) ? $collectionTypeCount[261] : 0}})</label>
+                                </dd>
+                                <dd class="aside-filter__itm">
+                                    <input type="checkbox" class="aside-filter__checkbox"
+                                           name="collection_type[260]" id="collection-type-260"
+                                           value="260"
+                                           {{$collectionType == 260 ? 'checked' : ''}}>
+                                    <label for="collection-type-260">@lang('translations.external') ({{isset($collectionTypeCount[260]) ? $collectionTypeCount[260] : 0}})</label>
+                                </dd>
+                            </dl>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="aside-bar__block">
+                @php
+                    $min = null;
+                    $max = null;
+                    $dates = !empty($all['dates']) ? $all['dates'] : old('dates');
+                    $dates = explode(',', $dates);
+                    if(is_array($dates) && count($dates) > 1) {
+                        $min = $dates[0];
+                        $max = $dates[1];
+                    }
+                @endphp
+                <p class="aslide-ttl">@lang('translations.time')</p>
+                <div id="aside-range">
+
+                    <input type="text" name="dates" class="aside-range__date" value="{{strlen(old('dates')) > 4 ? old('dates') : '1600,'.date('Y')}}" readonly>
+                    <input type="hidden" class="" id="aside-range__input-min" readonly
+                           value="{{$min ? $min : 1600}}">
+                    <input type="hidden" class="" id="aside-range__input-max" readonly
+                           value="{{$max ? $max : date('Y')}}">
+                    <label class="aside-range__result range-lbl" for="range-slider">
+                        <span class="range-lbl__output range-lbl__output--min"></span>
+                        <span class="range-lbl__output range-lbl__output--max"></span>
+                    </label>
+                    <div id="range-slider" name="slider"></div>
+                </div>
+            </li>
+            <li class="aside-bar__block">
+                <ul class="aside-accordion list-style">
+                    <li class="aside-accordion__itm">
+                        <input type="checkbox" name="filter-trigger" id="filter-trigger-places" class="main-filter-chxb">
+                        <label for="filter-trigger-places" class="main-filter-lbl">main-checkbox</label>
+                        <a href="#" class="aside-accordion__opener">@lang('translations.places')</a>
+                        <div class="aside-accordion__content">
+                            <dl class="aside-filter list-style aside-filter--advanced">
+                                <dt></dt>
+                                @php
+                                    $searcher = new App\Searcher();
+                                    $placesList = $searcher->prepareObjSelect(['singular' => 'place', 'plural' => 'places'], 27,'name_sort');
+                                    $thisPlaces = !empty($all['places']) ? $all['places'] : old('places');
+                                @endphp
+                                @foreach($placesList as $key => $place)
+                                    @if(isset($place->cnt))
+                                        <dd class="aside-filter__itm">
+                                            <input type="checkbox" class="aside-filter__checkbox"
+                                                   name="places[{{$key}}]" value="{{$place->id}}"
+                                                   id="place-{{$place->id}}"
+                                                    {{is_array($thisPlaces) &&
+                                                    in_array($place->id, $thisPlaces) ? 'checked' : ''}}>
+                                            <label for="place-{{$place->id}}">
+                                                {{$place->name}}({{$place->cnt}})
+                                            </label>
+                                        </dd>
+                                    @endif
+                                @endforeach
+                            </dl>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="aside-bar__block">
+                <div class="aside-action">
+                    <button type="submit" class="btn icon-arrow-r2 btn--ico aside-action__show">@lang('translations.show_results')</button>
+                    <button class="icon-refresh aside-action__reload" onclick="reload_page(event);">refresh</button>
+                </div>
+            </li>
+        </ul>
+    </form>
+</aside>
